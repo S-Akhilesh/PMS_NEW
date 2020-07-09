@@ -22,8 +22,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     FlagsSet.fetchFlag();
-    super.initState();
     startTimer();
+    super.initState();
+
   }
 
   @override
@@ -43,10 +44,12 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void navigateUser() async {
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     status = prefs.getBool('isloggedIn');
     setState(() {
       url = prefs.getString("url");
+      host = prefs.getString("host");
     });
     try {
       if (status == true && isConnected == true) {
