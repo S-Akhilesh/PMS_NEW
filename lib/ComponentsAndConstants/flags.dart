@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pms/ModelClasses/FlagMo.dart';
 
-bool defaultEnabled, rfidflag, helmetflag, isConnected = false;
+bool defaultEnabled = true,
+    rfidflag = true,
+    helmetflag = true,
+    isConnected = false;
 
 String host = '$url'; // setting Wifi Printer Host in Admin Panel
 String url;

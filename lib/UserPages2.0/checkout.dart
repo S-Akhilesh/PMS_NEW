@@ -21,7 +21,7 @@ class _nCheckoutState extends State<nCheckout> {
   ScanResult codeScanner, GlobalTNumber;
   int groupValue = 1;
   String qrCodeResult = "SCAN TO KNOW THE QR RESULTS";
-  String _rfidNumber = "RFID SCAN";
+  String _rfidNumber = "Scan RFID Card";
   TicketInit TicketNumberObject;
   // ignore: non_constant_identifier_names
   CoutWidgets CoutMethods = CoutWidgets();
@@ -37,7 +37,7 @@ class _nCheckoutState extends State<nCheckout> {
           elevation: 0.0,
           backgroundColor: Color(0xFF3383CD).withOpacity(0.7),
           title: Text(
-            "You can check out here.",
+            "CHECK OUT",
             style: TextStyle(
                 fontSize: 25.0, fontWeight: FontWeight.bold, letterSpacing: 2),
           )),
@@ -46,71 +46,71 @@ class _nCheckoutState extends State<nCheckout> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              SizedBox(
-                height: 80.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Icon(Icons.search, color: Colors.black, size: 30),
-                  Text(
-                    "VEHICLE NUMBER",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: 20.0,
-                        letterSpacing: 2),
-                  ),
-                  AnimatedContainer(
-                    duration: Duration(milliseconds: 100),
-                    height: 40.0,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: ToggleSBVnumber
-                          ? Colors.greenAccent[100]
-                          : Colors.redAccent[100].withOpacity(0.5),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Icon(Icons.search, color: Colors.black, size: 30),
+                    Text(
+                      "VEHICLE NUMBER",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                          fontSize: 20.0,
+                          letterSpacing: 2),
                     ),
-                    child: Stack(
-                      children: <Widget>[
-                        AnimatedPositioned(
-                          duration: Duration(milliseconds: 100),
-                          curve: Curves.easeIn,
-                          top: 3.0,
-                          left: ToggleSBVnumber ? 60.0 : 0.0,
-                          right: ToggleSBVnumber ? 0.0 : 60.0,
-                          child: InkWell(
-                            onTap: toggleVNButton,
-                            child: AnimatedSwitcher(
-                                duration: Duration(milliseconds: 100),
-                                // ignore: missing_return
-                                transitionBuilder: (Widget child,
-                                    Animation<double> animation) {
-                                  return RotationTransition(
-                                    child: child,
-                                    turns: animation,
-                                  );
-                                },
-                                child: ToggleSBVnumber
-                                    ? Icon(
-                                        Icons.check_circle_outline,
-                                        color: Colors.green,
-                                        size: 35.0,
-                                      )
-                                    : Icon(
-                                        Icons.remove_circle_outline,
-                                        color: Colors.red,
-                                        size: 35.0,
-                                      )),
+                    AnimatedContainer(
+                      duration: Duration(milliseconds: 100),
+                      height: 40.0,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        color: ToggleSBVnumber
+                            ? Colors.greenAccent[100]
+                            : Colors.redAccent[100].withOpacity(0.5),
+                      ),
+                      child: Stack(
+                        children: <Widget>[
+                          AnimatedPositioned(
+                            duration: Duration(milliseconds: 100),
+                            curve: Curves.easeIn,
+                            top: 3.0,
+                            left: ToggleSBVnumber ? 60.0 : 0.0,
+                            right: ToggleSBVnumber ? 0.0 : 60.0,
+                            child: InkWell(
+                              onTap: toggleVNButton,
+                              child: AnimatedSwitcher(
+                                  duration: Duration(milliseconds: 100),
+                                  // ignore: missing_return
+                                  transitionBuilder: (Widget child,
+                                      Animation<double> animation) {
+                                    return RotationTransition(
+                                      child: child,
+                                      turns: animation,
+                                    );
+                                  },
+                                  child: ToggleSBVnumber
+                                      ? Icon(
+                                          Icons.check_circle_outline,
+                                          color: Colors.green,
+                                          size: 35.0,
+                                        )
+                                      : Icon(
+                                          Icons.remove_circle_outline,
+                                          color: Colors.red,
+                                          size: 35.0,
+                                        )),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               SizedBox(
-                height: 20.0,
+                height: 5.0,
               ),
               Visibility(
                 visible: !ToggleSBVnumber,
@@ -118,54 +118,34 @@ class _nCheckoutState extends State<nCheckout> {
                   padding: const EdgeInsets.only(left: 16.0, right: 16.0),
                   child: Visibility(
                     visible: rfidflag,
-                    child: Row(
-                      children: <Widget>[
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              getTicketNumberFromAlternateId(
-                                  CoutMethods.alternateNumber);
-                              Stream<NDEFMessage> stream = NFC.readNDEF();
-                              stream.listen((NDEFMessage message) {
-                                print(message.data);
-                                _rfidNumber = message.data;
-                              });
+                    child: Expanded(
+                      child: FlatButton(
+                        padding: EdgeInsets.only(
+                            left: 120.0, right: 120.0, top: 15.0, bottom: 15.0),
+                        onPressed: () {
+                          setState(() {
+                            Stream<NDEFMessage> stream = NFC.readNDEF();
+                            stream.listen((NDEFMessage message) {
+                              print(message.data);
+                              _rfidNumber = message.data;
                             });
-                          },
-                          icon: Icon(Icons.tap_and_play),
-                          iconSize: 30.0,
-                          splashColor: Colors.lightGreenAccent.withOpacity(0.5),
-                        ),
-                        FlatButton(
-                          padding: EdgeInsets.only(
-                              left: 120.0,
-                              right: 120.0,
-                              top: 15.0,
-                              bottom: 15.0),
-                          onPressed: () {
-                            setState(() {
-                              Stream<NDEFMessage> stream = NFC.readNDEF();
-                              stream.listen((NDEFMessage message) {
-                                print(message.data);
-                                _rfidNumber = message.data;
-                              });
-                            });
-                          },
-                          child: Center(
-                            child: Text(
-                              _rfidNumber,
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.blue, width: 3.0),
-                            borderRadius: BorderRadius.circular(12.0),
+                          });
+                        },
+                        child: Center(
+                          child: Text(
+                            _rfidNumber,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
-                      ],
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                              color: Colors.black.withOpacity(0.5), width: 3.0),
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -204,7 +184,7 @@ class _nCheckoutState extends State<nCheckout> {
                     Text(
                       "PRINT RECIEPT",
                       style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                           color: Colors.black,
                           fontSize: 20.0,
                           letterSpacing: 2),
@@ -268,7 +248,7 @@ class _nCheckoutState extends State<nCheckout> {
                         title: Text(
                           "WiFi Printer",
                           style: TextStyle(
-                              letterSpacing: 3.0,
+                              letterSpacing: 2.0,
                               fontSize: 20.0,
                               fontWeight: FontWeight.bold),
                         ),
@@ -404,12 +384,13 @@ class _nCheckoutState extends State<nCheckout> {
                   child: Text(
                     "OPEN SCANNER",
                     style: TextStyle(
-                        color: Colors.blue,
+                        color: Colors.black,
                         fontWeight: FontWeight.bold,
                         fontSize: 20.0),
                   ),
                   shape: RoundedRectangleBorder(
-                    side: BorderSide(color: Colors.blue, width: 3.0),
+                    side: BorderSide(
+                        color: Colors.black.withOpacity(0.5), width: 3.0),
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                 ),
