@@ -37,55 +37,36 @@ class _LoginPageState extends State<LoginPage> {
     pc.clear();
   }
 
-
   @override
   Widget build(BuildContext context) {
     Future<void> signIn(String username, String password) async {
-        SharedPreferences sharedPreferences =
-            await SharedPreferences.getInstance();
-        Map data = {'user_name': username, 'user_pass': password};
-        var response = await http.post(
-            'http://$url/www/NEW/UserMasterTable.php',
-            body: data);
-        try {
-          if (response.statusCode == 200) {
-            isConnected = true;
-            sharedPreferences.setBool('isloggedIn', true);
-            var userJson = json.decode(response.body);
-            for (var user in userJson) {
-              users.insert(0, UserMasterMO.fromJson(user));
-            }
-            nameDisp = users[0].userName.toString();
-            if (users.length == 1) {
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => UserStartPage()),
-                  (Route<dynamic> route) => false);
-              showDialog(
-                  context: context,
-                  builder: (_) => AlertDialog(
-                        title: Text("Success"),
-                        content: Text("$nameDisp logged in successfully!"),
-                      ));
-            } else {
-              print("Wrong In");
-              showDialog(
-                  context: context,
-                  builder: (_) => AlertDialog(
-                        title: Text("Incorrect"),
-                        content: Text("Login failed!"),
-                        actions: [
-                          IconButton(
-                            icon: Icon(Icons.check),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      ));
-            }
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      Map data = {'user_name': username, 'user_pass': password};
+      var response = await http.post('http://$url/www/NEW/UserMasterTable.php',
+          body: data);
+      try {
+        if (response.statusCode == 200) {
+          isConnected = true;
+          sharedPreferences.setBool('isloggedIn', true);
+          var userJson = json.decode(response.body);
+          for (var user in userJson) {
+            users.insert(0, UserMasterMO.fromJson(user));
+          }
+          nameDisp = users[0].userName.toString();
+          if (users.length == 1) {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                    builder: (BuildContext context) => UserStartPage()),
+                (Route<dynamic> route) => false);
+            showDialog(
+                context: context,
+                builder: (_) => AlertDialog(
+                      title: Text("Success"),
+                      content: Text("$nameDisp logged in successfully!"),
+                    ));
           } else {
-            print("Wrong ");
+            print("Wrong In");
             showDialog(
                 context: context,
                 builder: (_) => AlertDialog(
@@ -101,7 +82,8 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ));
           }
-        } catch (Exception) {
+        } else {
+          print("Wrong ");
           showDialog(
               context: context,
               builder: (_) => AlertDialog(
@@ -117,7 +99,22 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ));
         }
-
+      } catch (Exception) {
+        showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+                  title: Text("Incorrect"),
+                  content: Text("Login failed!"),
+                  actions: [
+                    IconButton(
+                      icon: Icon(Icons.check),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ));
+      }
     }
 
     uc.addListener(() {

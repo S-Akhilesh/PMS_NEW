@@ -84,8 +84,8 @@ class _nCheckoutState extends State<nCheckout> {
                             child: AnimatedSwitcher(
                                 duration: Duration(milliseconds: 100),
                                 // ignore: missing_return
-                                transitionBuilder:
-                                    (Widget child, Animation<double> animation) {
+                                transitionBuilder: (Widget child,
+                                    Animation<double> animation) {
                                   return RotationTransition(
                                     child: child,
                                     turns: animation,
@@ -138,7 +138,10 @@ class _nCheckoutState extends State<nCheckout> {
                         ),
                         FlatButton(
                           padding: EdgeInsets.only(
-                              left: 120.0, right: 120.0, top: 15.0, bottom: 15.0),
+                              left: 120.0,
+                              right: 120.0,
+                              top: 15.0,
+                              bottom: 15.0),
                           onPressed: () {
                             setState(() {
                               Stream<NDEFMessage> stream = NFC.readNDEF();
@@ -455,8 +458,7 @@ class _nCheckoutState extends State<nCheckout> {
       'transaction_id': codeResult,
     };
     print(data);
-    var response = await http.post(
-        'http://192.168.43.196/www/NEW/getTicketNumberTid.php',
+    var response = await http.post('http://$url/www/NEW/getTicketNumberTid.php',
         body: data);
     try {
       if (response.statusCode == 200) {
@@ -484,8 +486,7 @@ class _nCheckoutState extends State<nCheckout> {
       'alternate_id': alterNumber,
     };
     print(data);
-    var response = await http.post(
-        'http://192.168.43.196/www/NEW/getTicketNumberAid.php',
+    var response = await http.post('http://$url/www/NEW/getTicketNumberAid.php',
         body: data);
     try {
       if (response.statusCode == 200) {
@@ -515,7 +516,7 @@ class _nCheckoutState extends State<nCheckout> {
     };
     print(data);
     var response =
-        await http.post('http://192.168.43.196/www/NEW/update.php', body: data);
+        await http.post('http://$url/www/NEW/update.php', body: data);
     try {
       if (response.statusCode == 200) {
         showError(response.body);
@@ -529,16 +530,16 @@ class _nCheckoutState extends State<nCheckout> {
     showDialog(
         context: context,
         builder: (_) => AlertDialog(
-          title: Text("STATUS"),
-          content: Text(msg),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.check),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        ));
+              title: Text("STATUS"),
+              content: Text(msg),
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.check),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ));
   }
 }

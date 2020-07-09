@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../ComponentsAndConstants/flags.dart';
-
 import '../ComponentsAndConstants/constants.dart';
 
 class Settings extends StatefulWidget {
@@ -8,12 +7,11 @@ class Settings extends StatefulWidget {
   _SettingsState createState() => _SettingsState();
 }
 
-
-
 class _SettingsState extends State<Settings> {
+  FlagSetState FlagsSet = new FlagSetState();
+
   @override
   Widget build(BuildContext context) {
-
     return Expanded(
       child: Scaffold(
         appBar: AppBar(
@@ -23,7 +21,7 @@ class _SettingsState extends State<Settings> {
           padding: const EdgeInsets.all(15.0),
           child: Column(
             children: <Widget>[
-              Row(
+              /*Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   Icon(Icons.child_friendly, color: Colors.black, size: 30),
@@ -209,14 +207,13 @@ class _SettingsState extends State<Settings> {
                   ),
                 ],
               ),
-
               SizedBox(
                 height: 20,
-              ),
+              ),*/
               FlatButton(
                 onPressed: () {
                   setState(() {
-                    fetchFlag();
+                    FlagsSet.fetchFlag();
                   });
                 },
                 child: Container(
