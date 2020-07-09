@@ -200,8 +200,8 @@ class _BluetoothPrintCheckOutState extends State<BluetoothPrintCheckOut> {
     };
     print(data);
     var response =
-        await http.post('http://$url/www/NEW/CheckOutPrint.php', body: data);
-    var response2 = await http.post('http://$url/www/NEW/BluetoothAPI2.php');
+        await http.post('http://$url/NEW/CheckOutPrint.php', body: data);
+    var response2 = await http.post('http://$url/NEW/BluetoothAPI2.php');
 
     try {
       if (response.statusCode == 200) {

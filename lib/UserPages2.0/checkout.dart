@@ -439,7 +439,7 @@ class _nCheckoutState extends State<nCheckout> {
       'transaction_id': codeResult,
     };
     print(data);
-    var response = await http.post('http://$url/www/NEW/getTicketNumberTid.php',
+    var response = await http.post('http://$url/NEW/getTicketNumberTid.php',
         body: data);
     try {
       if (response.statusCode == 200) {
@@ -467,7 +467,7 @@ class _nCheckoutState extends State<nCheckout> {
       'alternate_id': alterNumber,
     };
     print(data);
-    var response = await http.post('http://$url/www/NEW/getTicketNumberAid.php',
+    var response = await http.post('http://$url/NEW/getTicketNumberAid.php',
         body: data);
     try {
       if (response.statusCode == 200) {
@@ -497,7 +497,7 @@ class _nCheckoutState extends State<nCheckout> {
     };
     print(data);
     var response =
-        await http.post('http://$url/www/NEW/update.php', body: data);
+        await http.post('http://$url/NEW/update.php', body: data);
     try {
       if (response.statusCode == 200) {
         showError(response.body);

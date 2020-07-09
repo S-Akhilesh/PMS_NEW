@@ -380,7 +380,7 @@ class _nCheckinState extends State<nCheckin> {
     };
     print(data);
 
-    message = await http.post('http://$url/www/NEW/insert.php', body: data);
+    message = await http.post('http://$url/NEW/insert.php', body: data);
     try {
       if (message.statusCode == 200) {
         setState(() {
@@ -394,7 +394,7 @@ class _nCheckinState extends State<nCheckin> {
   }
 
   Future<void> getVehicleType() async {
-    var response = await http.post('http://$url/www/NEW/getVehicleType.php');
+    var response = await http.post('http://$url/NEW/getVehicleType.php');
     try {
       if (response.statusCode == 200) {
         var vehicleTypeList = json.decode(response.body);

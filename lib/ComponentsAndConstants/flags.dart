@@ -21,7 +21,7 @@ class FlagSetState extends State<FlagSet> {
   var flags = new FlagMo();
 
   Future<void> fetchFlag() async {
-    var response = await http.post('http://$url/www/NEW/Flag.php');
+    var response = await http.post('http://$url/NEW/Flag.php');
     try {
       if (response.statusCode == 200) {
         var flagJson = json.decode(response.body);
