@@ -18,9 +18,10 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  FlagSetState FlagsSet = new FlagSetState();
   @override
   void initState() {
-    // TODO: implement initState
+    FlagsSet.fetchFlag();
     super.initState();
     startTimer();
   }

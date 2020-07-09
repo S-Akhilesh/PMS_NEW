@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:esc_pos_printer/esc_pos_printer.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:pms/ComponentsAndConstants/flags.dart';
 import 'package:pms/ModelClasses/check_in_print.dart';
 import 'package:pms/ModelClasses/check_out_print2.dart';
 
@@ -183,10 +184,8 @@ class _BluetoothPrintState extends State<BluetoothPrint> {
   }
 
   Future<void> fetchDetails() async {
-    var response =
-        await http.post('http://192.168.43.252/www/API/BluetoothAPI.php');
-    var response2 =
-        await http.post('http://192.168.43.252/www/API/BluetoothAPI2.php');
+    var response = await http.post('http://$url/www/NEW/BluetoothAPI.php');
+    var response2 = await http.post('http://$url/www/NEW/BluetoothAPI2.php');
 
     try {
       if (response.statusCode == 200) {

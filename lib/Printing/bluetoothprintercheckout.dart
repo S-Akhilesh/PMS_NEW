@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:esc_pos_printer/esc_pos_printer.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:pms/ComponentsAndConstants/flags.dart';
 import 'package:pms/ModelClasses/check_out_print.dart';
 import 'package:pms/ModelClasses/check_out_print2.dart';
 import 'package:pms/UserPages2.0/Methods/CoutFormFields.dart';
@@ -198,10 +199,9 @@ class _BluetoothPrintCheckOutState extends State<BluetoothPrintCheckOut> {
       "ticket_number": Cout.ticketNumber,
     };
     print(data);
-    var response = await http
-        .post('http://192.168.43.252/www/API/CheckOutPrint.php', body: data);
-    var response2 =
-        await http.post('http://192.168.43.252/www/API/BluetoothAPI2.php');
+    var response =
+        await http.post('http://$url/www/NEW/CheckOutPrint.php', body: data);
+    var response2 = await http.post('http://$url/www/NEW/BluetoothAPI2.php');
 
     try {
       if (response.statusCode == 200) {

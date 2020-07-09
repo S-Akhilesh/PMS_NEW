@@ -43,7 +43,6 @@ class _nCheckinState extends State<nCheckin> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        titleSpacing: 45,
         elevation: 0.0,
         backgroundColor: Color(0xFF3383CD).withOpacity(0.7),
         title: Text(
@@ -61,63 +60,45 @@ class _nCheckinState extends State<nCheckin> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  SizedBox(
-                    height: 80.0,
-                  ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                    padding: const EdgeInsets.only(
+                        left: 16.0, right: 16.0, top: 16.0),
                     child: Visibility(
                       visible: rfidflag,
-                      child: Row(
-                        children: <Widget>[
-                          IconButton(
-                            onPressed: () {
-                              setState(() {
-                                Stream<NDEFMessage> stream = NFC.readNDEF();
-                                stream.listen((NDEFMessage message) {
-                                  print(message.data);
-                                  _rfidNumber = message.data;
-                                });
+                      child: Expanded(
+                        child: FlatButton(
+                          padding: EdgeInsets.only(
+                              left: 120.0,
+                              right: 120.0,
+                              top: 15.0,
+                              bottom: 15.0),
+                          onPressed: () {
+                            setState(() {
+                              Stream<NDEFMessage> stream = NFC.readNDEF();
+                              stream.listen((NDEFMessage message) {
+                                print(message.data);
+                                _rfidNumber = message.data;
                               });
-                            },
-                            icon: Icon(Icons.tap_and_play),
-                            iconSize: 30.0,
-                            splashColor:
-                                Colors.lightGreenAccent.withOpacity(0.5),
-                          ),
-                          Expanded(
-                            child: FlatButton(
-                              padding: EdgeInsets.only(
-                                  left: 120.0,
-                                  right: 120.0,
-                                  top: 15.0,
-                                  bottom: 15.0),
-                              onPressed: () {
-                                setState(() {
-                                  Stream<NDEFMessage> stream = NFC.readNDEF();
-                                  stream.listen((NDEFMessage message) {
-                                    print(message.data);
-                                    _rfidNumber = message.data;
-                                  });
-                                });
-                              },
-                              child: Center(
-                                child: Text(
-                                  _rfidNumber,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              shape: RoundedRectangleBorder(
-                                side:
-                                    BorderSide(color: Colors.blue, width: 3.0),
-                                borderRadius: BorderRadius.circular(12.0),
+                            });
+                          },
+                          child: Expanded(
+                            child: Center(
+                              child: Text(
+                                _rfidNumber,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.w400),
                               ),
                             ),
                           ),
-                        ],
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(
+                                color: Colors.black.withOpacity(0.5),
+                                width: 3.0),
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -128,7 +109,7 @@ class _nCheckinState extends State<nCheckin> {
                         CinMethods.buildANumber(context),
                         CinMethods.buildVNumber(context),
                         Visibility(
-                          visible: bikeSelectedFlag,
+                          visible: bikeSelectedFlag & helmetflag,
                           child: CinMethods.buildNoHelmet(context),
                         ),
                         Padding(
@@ -150,7 +131,7 @@ class _nCheckinState extends State<nCheckin> {
                                       "SELECT VEHICLE TYPE",
                                       style: TextStyle(
                                           letterSpacing: 0,
-                                          fontSize: 20.0,
+                                          fontSize: 18.0,
                                           fontWeight: FontWeight.w400,
                                           color: Colors.black),
                                     ),
@@ -158,7 +139,7 @@ class _nCheckinState extends State<nCheckin> {
                                   DropdownButton<String>(
                                     icon: Icon(
                                       Icons.keyboard_arrow_down,
-                                      size: 30,
+                                      size: 25,
                                       color: Colors.black,
                                     ),
                                     underline: Container(),
@@ -399,8 +380,7 @@ class _nCheckinState extends State<nCheckin> {
     };
     print(data);
 
-    message =
-        await http.post('http://192.168.43.196/www/NEW/insert.php', body: data);
+    message = await http.post('http://$url/www/NEW/insert.php', body: data);
     try {
       if (message.statusCode == 200) {
         setState(() {
@@ -414,8 +394,7 @@ class _nCheckinState extends State<nCheckin> {
   }
 
   Future<void> getVehicleType() async {
-    var response =
-        await http.post('http://192.168.43.196/www/NEW/getVehicleType.php');
+    var response = await http.post('http://$url/www/NEW/getVehicleType.php');
     try {
       if (response.statusCode == 200) {
         var vehicleTypeList = json.decode(response.body);
@@ -439,16 +418,16 @@ class _nCheckinState extends State<nCheckin> {
     showDialog(
         context: context,
         builder: (_) => AlertDialog(
-          title: Text("STATUS"),
-          content: Text(msg),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.check),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        ));
+              title: Text("STATUS"),
+              content: Text(msg),
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.check),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ));
   }
 }
