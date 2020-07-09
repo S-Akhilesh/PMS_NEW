@@ -184,8 +184,8 @@ class _BluetoothPrintState extends State<BluetoothPrint> {
   }
 
   Future<void> fetchDetails() async {
-    var response = await http.post('http://$url/www/NEW/BluetoothAPI.php');
-    var response2 = await http.post('http://$url/www/NEW/BluetoothAPI2.php');
+    var response = await http.post('http://$url/NEW/BluetoothAPI.php');
+    var response2 = await http.post('http://$url/NEW/BluetoothAPI2.php');
 
     try {
       if (response.statusCode == 200) {

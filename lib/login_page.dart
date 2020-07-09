@@ -44,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
       Map data = {'user_name': username, 'user_pass': password};
-      var response = await http.post('http://$url/www/NEW/UserMasterTable.php',
+      var response = await http.post('http://$url/NEW/UserMasterTable.php',
           body: data);
       try {
         if (response.statusCode == 200) {
