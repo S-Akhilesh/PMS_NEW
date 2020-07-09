@@ -26,9 +26,10 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController uc = TextEditingController();
   TextEditingController pc = TextEditingController();
-
+  FlagSetState FlagsSet = new FlagSetState();
   @override
   void initState() {
+    FlagsSet.fetchFlag();
     super.initState();
   }
 

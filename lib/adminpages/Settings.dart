@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pms/ComponentsAndConstants/textfield.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../ComponentsAndConstants/flags.dart';
 import '../ComponentsAndConstants/constants.dart';
 
@@ -6,12 +8,16 @@ class Settings extends StatefulWidget {
   @override
   _SettingsState createState() => _SettingsState();
 }
-
+TextEditingController cHost = TextEditingController();
 class _SettingsState extends State<Settings> {
   FlagSetState FlagsSet = new FlagSetState();
 
   @override
   Widget build(BuildContext context) {
+    var urls;
+    cHost.addListener(() {
+      urls = cHost.text;
+    });
     return Expanded(
       child: Scaffold(
         appBar: AppBar(
@@ -210,11 +216,23 @@ class _SettingsState extends State<Settings> {
               SizedBox(
                 height: 20,
               ),*/
+              BeautyTextfield(
+                cornerRadius: BorderRadius.circular(50),
+                width: 400,
+                height: 70,
+                inputType: TextInputType.text,
+                prefixIcon: Icon(Icons.link),
+                controller: cHost,
+                placeholder: "HOST",
+                onSubmitted: (text) {
+                  host = text;
+                },
+              ),
               FlatButton(
-                onPressed: () {
-                  setState(() {
-                    FlagsSet.fetchFlag();
-                  });
+                onPressed: () async {
+                    urls = cHost.text;
+                    SharedPreferences prefs = await SharedPreferences.getInstance();
+                    prefs.setString("host",urls);
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -231,7 +249,7 @@ class _SettingsState extends State<Settings> {
                   ),
                   padding: EdgeInsets.symmetric(vertical: 20, horizontal: 75),
                   child: Text(
-                    'GET FLAGS',
+                    'SET HOST',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
