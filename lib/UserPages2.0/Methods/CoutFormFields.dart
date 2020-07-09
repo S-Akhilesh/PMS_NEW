@@ -14,6 +14,11 @@ class CoutWidgets {
     _cTicketNumber.clear();
     _cVehicleNumber.clear();
     _cAlternateNumber.clear();
+    vehicleNumber = " ";
+  }
+
+  fetchClear() {
+    vehicleNumber = " ";
   }
 
   // ignore: missing_return
