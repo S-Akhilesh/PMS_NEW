@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:nfc_in_flutter/nfc_in_flutter.dart';
+import 'package:pms/ComponentsAndConstants/textfield.dart';
 import 'package:pms/ModelClasses/ticketInit.dart';
 import 'package:pms/Printing/bluetoothprintercheckout.dart';
 import 'package:pms/login_page.dart';
@@ -150,9 +151,6 @@ class _nCheckoutState extends State<nCheckout> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 10.0,
-              ),
               Form(
                 key: _formKey,
                 child: Column(
@@ -173,7 +171,7 @@ class _nCheckoutState extends State<nCheckout> {
                 ),
               ),
               SizedBox(
-                height: 30.0,
+                height: 10.0,
               ),
               Visibility(
                 visible: !ToggleSBVnumber,
@@ -320,16 +318,19 @@ class _nCheckoutState extends State<nCheckout> {
                     ),
                     onPressed: () {
                       validate();
+                      if (validated) checkout();
                       setState(() {
-                        if (isprint && validated)
+                        if (isprint && validated) {
                           Navigator.push(
                             context,
                             new MaterialPageRoute(
                               builder: (context) => BluetoothPrintCheckOut(),
                             ),
                           );
+                        }
                         _rfidNumber = "Scan RFID Card";
                         CoutMethods.readOnly = false;
+                        checkoutClear();
                       });
                     },
                   ),
@@ -341,6 +342,9 @@ class _nCheckoutState extends State<nCheckout> {
                   //TODO: DATABASE CONNECTION VARIABLE
                   onPressed: () {
                     validate();
+                    toggleVNButton();
+                    getTicketNumberFromVehicleNumber(CoutMethods.vehicleNumber);
+                    CoutMethods.fetchClear();
                     setState(() {});
                   },
                   child: Container(
@@ -358,12 +362,12 @@ class _nCheckoutState extends State<nCheckout> {
                     ),
                     padding: EdgeInsets.symmetric(vertical: 20, horizontal: 75),
                     child: Text(
-                      'SHOW DATA',
+                      'FETCH TICKET NUMBER',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
-                          fontSize: 20.0,
-                          letterSpacing: 5),
+                          fontSize: 15.0,
+                          letterSpacing: 0),
                     ),
                   ),
                 ),
@@ -419,9 +423,7 @@ class _nCheckoutState extends State<nCheckout> {
 
   validate() {
     if (_formKey.currentState.validate()) {
-      checkout();
       validated = true;
-
       return;
     } else {
       _formKey.currentState.save();
@@ -449,10 +451,10 @@ class _nCheckoutState extends State<nCheckout> {
         for (var tnumber in ticketNumberJason) {
           TicketNumberObject = TicketInit.fromJson(tnumber);
         }
+        print("Svanne after fpor");
         print(TicketNumberObject.ticketNumber);
         setState(() {
           if (TicketNumberObject.ticketNumber == false) {
-            //TODO: ALTER MESSAGE AID DOESNT EXITS.
           } else
             CoutMethods.setTicketNumber(TicketNumberObject.ticketNumber);
         });
@@ -490,6 +492,33 @@ class _nCheckoutState extends State<nCheckout> {
     }
   }
 
+  Future<void> getTicketNumberFromVehicleNumber(String vehicleNumber) async {
+    Map data = {
+      'vehicle_number': vehicleNumber,
+    };
+    print(data);
+    var response = await http.post(
+        'http://$url/www/NEW/getTicketNumberVehilceNumber.php',
+        body: data);
+    try {
+      if (response.statusCode == 200) {
+        var ticketNumberJason = json.decode(response.body);
+        setState(() {
+          if (ticketNumberJason == "F") {
+            showError("No such vehicle checked in.");
+          } else {
+            for (var tnumber in ticketNumberJason) {
+              TicketNumberObject = TicketInit.fromJson(tnumber);
+            }
+            CoutMethods.setTicketNumber(TicketNumberObject.ticketNumber);
+          }
+        });
+      }
+    } catch (Exception) {
+      print("ERRORsf");
+    }
+  }
+
   Future<void> checkout() async {
     Map data = {
       "ticket_number": CoutMethods.ticketNumber,
@@ -500,7 +529,7 @@ class _nCheckoutState extends State<nCheckout> {
         await http.post('http://$url/www/NEW/update.php', body: data);
     try {
       if (response.statusCode == 200) {
-        showError(response.body);
+        showError("Checked out/Already checked out");
       }
     } catch (Exception) {
       print("ERROR");
@@ -522,5 +551,10 @@ class _nCheckoutState extends State<nCheckout> {
                 ),
               ],
             ));
+  }
+
+  checkoutClear() {
+    validated = false;
+    CoutMethods.clear();
   }
 }
