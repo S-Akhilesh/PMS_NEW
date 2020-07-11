@@ -29,7 +29,7 @@ class _BluetoothPrintState extends State<BluetoothPrint> {
   @override
   void initState() {
     _loading = true;
-    fetchDetails();
+    Timer(Duration(seconds: 2), fetchDetails);
     super.initState();
   }
 
@@ -112,8 +112,14 @@ class _BluetoothPrintState extends State<BluetoothPrint> {
     ]);
     ticket.row([
       PosColumn(
-        text: 'Email: $email',
-        width: 12,
+        text: 'Email:',
+        width: 1,
+        styles:
+            PosStyles(align: PosTextAlign.left, underline: true, bold: true),
+      ),
+      PosColumn(
+        text: '$email',
+        width: 11,
         styles:
             PosStyles(align: PosTextAlign.left, underline: true, bold: true),
       ),
@@ -170,7 +176,7 @@ class _BluetoothPrintState extends State<BluetoothPrint> {
             PosStyles(align: PosTextAlign.left, underline: false, bold: true),
       ),
     ]);
-    ticket.emptyLines(2);
+    ticket.emptyLines(1);
     final List<dynamic> barData = returnTid("$receiptno");
     ticket.barcode(Barcode.code39(barData));
     ticket.feed(1);
@@ -191,12 +197,16 @@ class _BluetoothPrintState extends State<BluetoothPrint> {
       if (response.statusCode == 200) {
         var jsonResponse = json.decode(response.body);
         var jsonResponse2 = json.decode(response2.body);
-
+        print(jsonResponse);
+        print(jsonResponse2);
         for (var types in jsonResponse) {
           receiptno = (CheckInPrint.fromJson(types).transactionId);
           vechiletype = (CheckInPrint.fromJson(types).vehicleType);
           vehcilenumber = (CheckInPrint.fromJson(types).vehicleNumber);
-          indate = (CheckInPrint.fromJson(types).checkinTime.toIso8601String());
+          indate = (CheckInPrint.fromJson(types)
+              .checkinTime
+              .toIso8601String()
+              .replaceAll("000", " "));
         }
         for (var types in jsonResponse2) {
           organistion =
@@ -210,8 +220,14 @@ class _BluetoothPrintState extends State<BluetoothPrint> {
         print(receiptno);
       }
     } catch (Exception) {
-      print("GOthilla");
+      print("Check in print error");
     }
+    printerManager.startScan(Duration(milliseconds: 1));
+    printerManager.scanResults.listen((scannedDevices) {
+      setState(() {
+        _devices = scannedDevices;
+      });
+    });
     setState(() {
       _loading = false;
     });
