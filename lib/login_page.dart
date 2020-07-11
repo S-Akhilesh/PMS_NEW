@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,12 +9,11 @@ import 'ComponentsAndConstants/textfield.dart';
 import 'userstart.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'ModelClasses/UserMasterMO.dart';
 import 'adminpages/AdminDashboard.dart';
 
 var users = new List<UserMasterMO>();
-String nameDisp = '  ';
+String nameDisp = '';
 var username = '', password = '';
 
 class LoginPage extends StatefulWidget {
@@ -29,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   FlagSetState FlagsSet = new FlagSetState();
   @override
   void initState() {
-    FlagsSet.fetchFlag();
+    Timer(Duration(seconds: 2), FlagsSet.fetchFlag);
     super.initState();
   }
 
@@ -44,8 +42,8 @@ class _LoginPageState extends State<LoginPage> {
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
       Map data = {'user_name': username, 'user_pass': password};
-      var response = await http.post('http://$url/NEW/UserMasterTable.php',
-          body: data);
+      var response =
+          await http.post('http://$url/NEW/UserMasterTable.php', body: data);
       try {
         if (response.statusCode == 200) {
           isConnected = true;
@@ -64,7 +62,11 @@ class _LoginPageState extends State<LoginPage> {
                 context: context,
                 builder: (_) => AlertDialog(
                       title: Text("Success"),
-                      content: Text("$nameDisp logged in successfully!"),
+                      content: Text(
+                        "$nameDisp logged in successfully!",
+                        style: TextStyle(
+                            fontSize: 25, fontStyle: FontStyle.italic),
+                      ),
                     ));
           } else {
             print("Wrong In");
@@ -89,7 +91,11 @@ class _LoginPageState extends State<LoginPage> {
               context: context,
               builder: (_) => AlertDialog(
                     title: Text("Incorrect"),
-                    content: Text("Login failed!"),
+                    content: Text(
+                      "Login failed!",
+                      style:
+                          TextStyle(fontSize: 30, fontStyle: FontStyle.italic),
+                    ),
                     actions: [
                       IconButton(
                         icon: Icon(Icons.check),

@@ -7,6 +7,7 @@ import 'package:pms/ComponentsAndConstants/flags.dart';
 import 'package:pms/ModelClasses/check_out_print.dart';
 import 'package:pms/ModelClasses/check_out_print2.dart';
 import 'package:pms/UserPages2.0/Methods/CoutFormFields.dart';
+import 'package:pms/UserPages2.0/checkout.dart';
 
 class BluetoothPrintCheckOut extends StatefulWidget {
   @override
@@ -32,8 +33,8 @@ class _BluetoothPrintCheckOutState extends State<BluetoothPrintCheckOut> {
   bool _loading = false;
   @override
   void initState() {
-    _loading = false;
-    fetchDetailsOut();
+    _loading = true;
+    Timer(Duration(seconds: 2), fetchDetailsOut);
     super.initState();
   }
 
@@ -55,8 +56,6 @@ class _BluetoothPrintCheckOutState extends State<BluetoothPrintCheckOut> {
           : ListView.builder(
               itemBuilder: (context, position) => ListTile(
                 onTap: () async {
-                  //TODO: FETCH THE CALCULATED DETAILS OF THE TICKET AND PRINT
-
                   bluetoothPrintOut(position);
                 },
                 title: Text(_devices[position].name),
@@ -156,6 +155,14 @@ class _BluetoothPrintCheckOutState extends State<BluetoothPrintCheckOut> {
     ticket.emptyLines(1);
     ticket.row([
       PosColumn(
+        text: 'IN DATE: $indate',
+        width: 12,
+        styles:
+            PosStyles(align: PosTextAlign.left, underline: false, bold: true),
+      ),
+    ]);
+    ticket.row([
+      PosColumn(
         text: 'OUT DATE: $outdate',
         width: 12,
         styles:
@@ -183,7 +190,6 @@ class _BluetoothPrintCheckOutState extends State<BluetoothPrintCheckOut> {
         ),
       ),
     ]);
-    ticket.emptyLines(2);
     ticket.feed(1);
     ticket.cut();
     printerManager.printTicket(ticket).then((result) {
@@ -196,7 +202,7 @@ class _BluetoothPrintCheckOutState extends State<BluetoothPrintCheckOut> {
 
   Future<void> fetchDetailsOut() async {
     Map data = {
-      "ticket_number": Cout.ticketNumber,
+      "ticket_number": Dupnumber,
     };
     print(data);
     var response =
@@ -210,32 +216,42 @@ class _BluetoothPrintCheckOutState extends State<BluetoothPrintCheckOut> {
         print(jsonResponse);
         print(jsonResponse2);
         for (var types in jsonResponse) {
+          print("inside");
           receiptno = (CheckOutPrint.fromJson(types).transactionId);
           vechiletype = (CheckOutPrint.fromJson(types).vehicleType);
           vehcilenumber = (CheckOutPrint.fromJson(types).vehicleNumber);
-          indate =
-              (CheckOutPrint.fromJson(types).checkinTime.toIso8601String());
-          outdate =
-              (CheckOutPrint.fromJson(types).checkinTime.toIso8601String());
+          indate = (CheckOutPrint.fromJson(types)
+              .checkinTime
+              .toIso8601String()
+              .replaceAll("000", " "));
+          outdate = (CheckOutPrint.fromJson(types)
+              .checkoutTime
+              .toIso8601String()
+              .replaceAll("000", " "));
           duration = (CheckOutPrint.fromJson(types).totalTime);
           fee = (CheckOutPrint.fromJson(types).grandTotal);
         }
         for (var types in jsonResponse2) {
+          print("inside2");
           organistion =
               (CheckOutPrint2.fromJson(types).organizationName.toUpperCase());
           phnumber = (CheckOutPrint2.fromJson(types).phonenumber);
           email = (CheckOutPrint2.fromJson(types).email);
           address = (CheckOutPrint2.fromJson(types).address);
         }
-//
-//        print(receiptno);
       }
     } catch (Exception) {
-      print("GOthilla");
+      print("Check-out printer exception");
     }
 
     setState(() {
-      _loading = true;
+      _loading = false;
+    });
+    printerManager.startScan(Duration(microseconds: 1));
+    printerManager.scanResults.listen((scannedDevices) {
+      setState(() {
+        _devices = scannedDevices;
+      });
     });
   }
 }

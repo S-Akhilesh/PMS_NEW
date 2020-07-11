@@ -46,7 +46,7 @@ class _nCheckinState extends State<nCheckin> {
         elevation: 0.0,
         backgroundColor: Color(0xFF3383CD).withOpacity(0.7),
         title: Text(
-          "You can check in here.",
+          "Check-in",
           style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.w300),
         ),
       ),
@@ -321,7 +321,6 @@ class _nCheckinState extends State<nCheckin> {
                         setState(() {
                           if (isprint && validated) {
                             if (groupValue == 2) {
-                              print("BLUETOOTH");
                               Navigator.push(
                                 context,
                                 new MaterialPageRoute(
@@ -381,8 +380,10 @@ class _nCheckinState extends State<nCheckin> {
     print(data);
 
     message = await http.post('http://$url/NEW/insert.php', body: data);
+    print(message.body);
     try {
       if (message.statusCode == 200) {
+        print("Inserted");
         setState(() {
           msg = message.body;
         });

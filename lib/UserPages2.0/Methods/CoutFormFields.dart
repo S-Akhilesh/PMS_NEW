@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pms/UserPages2.0/checkout.dart';
 
 class CoutWidgets {
   TextEditingController _cAlternateNumber = TextEditingController();
@@ -26,6 +27,7 @@ class CoutWidgets {
     //TODO: FETCH TICKET ID USING QRCODE AND INITIALISE TO ticketnumber
     _cTicketNumber = TextEditingController(text: ticketnumber);
     ticketNumber = ticketnumber;
+    Dupnumber = ticketnumber;
     readOnly = true;
   }
 
@@ -42,7 +44,7 @@ class CoutWidgets {
           child: TextFormField(
             focusNode: _fAlternate,
             onFieldSubmitted: (term) {
-              _fieldFocusChange(context, _fAlternate, _fVehicle);
+              _fieldFocusChange(context, _fAlternate, _fTicketNumber);
             },
             textInputAction: TextInputAction.next,
             onChanged: (input) {
@@ -53,7 +55,7 @@ class CoutWidgets {
             decoration: InputDecoration(
               helperText: "ENTER ALTERNATE NUMBER",
               helperStyle: TextStyle(
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
                 fontStyle: FontStyle.italic,
                 color: Colors.black,
               ),
@@ -96,7 +98,7 @@ class CoutWidgets {
             decoration: InputDecoration(
               helperText: "ENTER VEHICLE NUMBER",
               helperStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                   fontStyle: FontStyle.italic,
                   color: Colors.black),
               icon: Icon(
@@ -140,7 +142,7 @@ class CoutWidgets {
             decoration: InputDecoration(
               helperText: "ENTER TICKET NUMBER",
               helperStyle: TextStyle(
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
                 fontStyle: FontStyle.italic,
                 color: Colors.black,
               ),
@@ -152,6 +154,7 @@ class CoutWidgets {
             cursorColor: Colors.black,
             onChanged: (String text) {
               ticketNumber = text;
+              print(ticketNumber);
             },
             keyboardType: TextInputType.text,
           ),
