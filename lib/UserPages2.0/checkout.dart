@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import '../ComponentsAndConstants/flags.dart';
 import 'package:http/http.dart' as http;
 
 String Dupnumber = '';
+String tabTNo = 'PA', tabVno = "KA", tabCost = "0";
 bool alterNumber = false;
 
 // ignore: camel_case_types
@@ -18,6 +20,7 @@ class nCheckout extends StatefulWidget {
   @override
   _nCheckoutState createState() => _nCheckoutState();
 }
+
 
 // ignore: camel_case_types
 class _nCheckoutState extends State<nCheckout> {
@@ -31,6 +34,14 @@ class _nCheckoutState extends State<nCheckout> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   // ignore: non_constant_identifier_names
   bool isprint = false, validated = false, ToggleSBVnumber = false;
+
+  @override
+  void initState() {
+    tabTNo = ' ';
+    tabVno = ' ';
+    tabCost = ' ';
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +145,10 @@ class _nCheckoutState extends State<nCheckout> {
                   child: Expanded(
                     child: FlatButton(
                       padding: EdgeInsets.only(
-                          left: 120.0, right: 120.0, top: 15.0, bottom: 15.0),
+                          left: 120.0,
+                          right: 120.0,
+                          top: 15.0,
+                          bottom: 15.0),
                       onPressed: () {
                         setState(() {
                           Stream<NDEFMessage> stream = NFC.readNDEF();
@@ -149,8 +163,8 @@ class _nCheckoutState extends State<nCheckout> {
                           _rfidNumber,
                           style: TextStyle(
                               color: Colors.black,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold),
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.w400),
                         ),
                       ),
                       shape: RoundedRectangleBorder(
@@ -328,9 +342,9 @@ class _nCheckoutState extends State<nCheckout> {
                         fontSize: 20.0,
                         letterSpacing: 5),
                   ),
-                  onPressed: () {
+                  onPressed: ()  {
                     validate();
-                    if (validated) checkout();
+                    if (validated)  checkout();
                     setState(() {
                       if (isprint && validated) {
                         Navigator.push(
@@ -339,6 +353,9 @@ class _nCheckoutState extends State<nCheckout> {
                             builder: (context) => BluetoothPrintCheckOut(),
                           ),
                         );
+                      }
+                      else if(!isprint && validated){
+                        startTimer();
                       }
                       _rfidNumber = "Scan RFID Card";
                       CoutMethods.readOnly = false;
@@ -394,7 +411,6 @@ class _nCheckoutState extends State<nCheckout> {
                   codeScanner = await BarcodeScanner.scan();
                   setState(() {
                     qrCodeResult = codeScanner.rawContent;
-                    print(qrCodeResult);
                     getTicketNumberFromScanner(qrCodeResult);
                   });
                 },
@@ -412,6 +428,30 @@ class _nCheckoutState extends State<nCheckout> {
                 ),
               ),
             ),
+            Visibility(
+              visible: !isprint && !ToggleSBVnumber ,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Card(
+                    child: DataTable(
+                      columns: [
+                        DataColumn(label: Text("Ticket Number")),
+                        DataColumn(label: Text("Vehicle Number")),
+                        DataColumn(label: Text("Cost")),
+                      ],
+                      rows: [
+                        DataRow(cells: [
+                          DataCell(Text(tabTNo)),
+                          DataCell(Text(tabVno)),
+                          DataCell(Text(tabCost)),
+                        ]),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),
@@ -462,6 +502,7 @@ class _nCheckoutState extends State<nCheckout> {
           TicketNumberObject = TicketInit.fromJson(tnumber);
         }
         setState(() {
+          // ignore: unrelated_type_equality_checks
           if (TicketNumberObject.ticketNumber == false) {
           } else
             CoutMethods.setTicketNumber(TicketNumberObject.ticketNumber);
@@ -469,7 +510,8 @@ class _nCheckoutState extends State<nCheckout> {
         });
       }
     } catch (Exception) {
-      print("HELLO YOU CANT SCAN");
+      showError("No such vehicle found!");
+      checkoutClear();
     }
   }
 
@@ -497,7 +539,6 @@ class _nCheckoutState extends State<nCheckout> {
         });
       }
     } catch (Exception) {
-      print("ERROR");
       showError("Please enter a valid number");
     }
   }
@@ -508,7 +549,7 @@ class _nCheckoutState extends State<nCheckout> {
     };
     print(data);
     var response = await http.post(
-        'http://$url/www/NEW/getTicketNumberVehilceNumber.php',
+        'http://$url/NEW/getTicketNumberVehilceNumber.php',
         body: data);
     try {
       if (response.statusCode == 200) {
@@ -525,7 +566,6 @@ class _nCheckoutState extends State<nCheckout> {
         });
       }
     } catch (Exception) {
-      print("ERROR");
       showError("Some error occured, Please RETRY");
     }
   }
@@ -542,7 +582,6 @@ class _nCheckoutState extends State<nCheckout> {
         showError("Checked out/Already checked out");
       }
     } catch (Exception) {
-      print("ERROR");
       showError("Error while checking out. RETRY");
     }
   }
@@ -567,5 +606,30 @@ class _nCheckoutState extends State<nCheckout> {
   checkoutClear() {
     validated = false;
     CoutMethods.clear();
+  }
+
+  void startTimer() {
+    Timer(Duration(seconds: 1), () {
+      fetchTableItems();
+    });
+  }
+
+  Future<void> fetchTableItems() async{
+    Map data = {
+      "ticket_number": CoutMethods.ticketNumber,
+    };
+    var response = await http.post('http://$url/NEW/tabDetails.php', body: data);
+    try {
+      if (response.statusCode == 200) {
+        var fetch = json.decode(response.body);
+        setState(() {
+          tabTNo = fetch[0]['ticket_number'];
+          tabVno = fetch[0]['vehicle_number'];
+          tabCost = fetch[0]['grand_total'];
+        });
+      }
+    } catch (Exception) {
+      showError("Error while fetching details. RETRY");
+    }
   }
 }

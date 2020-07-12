@@ -25,6 +25,7 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController uc = TextEditingController();
   TextEditingController pc = TextEditingController();
   FlagSetState FlagsSet = new FlagSetState();
+
   @override
   void initState() {
     Timer(Duration(seconds: 2), FlagsSet.fetchFlag);
@@ -39,6 +40,15 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     Future<void> signIn(String username, String password) async {
+//      setState(() {
+//        if(!isConnected){
+//          return Center(
+//              child: Padding(
+//                padding: const EdgeInsets.all(150.0),
+//                child: LinearProgressIndicator(),
+//              ));
+//        }
+//      });
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
       Map data = {'user_name': username, 'user_pass': password};
@@ -53,11 +63,12 @@ class _LoginPageState extends State<LoginPage> {
             users.insert(0, UserMasterMO.fromJson(user));
           }
           nameDisp = users[0].userName.toString();
+
           if (users.length == 1) {
             Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                    builder: (BuildContext context) => UserStartPage()),
-                (Route<dynamic> route) => false);
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => UserStartPage()),
+                    (Route<dynamic> route) => false);
             showDialog(
                 context: context,
                 builder: (_) => AlertDialog(
@@ -207,6 +218,7 @@ class _LoginPageState extends State<LoginPage> {
                       signIn(username, password);
                     }
                   });
+
                   clear();
                 },
                 child: Container(

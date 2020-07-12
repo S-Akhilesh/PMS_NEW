@@ -55,65 +55,56 @@ class _UserStartPageState extends State<UserStartPage> {
         ),
       ),
       child: Scaffold(
-//        appBar: AppBar(
-//          titleSpacing: 30,
-//          elevation: 0.0,
-//          title: Row(
-//            children: <Widget>[
-//
-//            ],
-//          ),
-//          backgroundColor: Color(0xFF3383CD).withOpacity(0.7),
-//          actions: <Widget>[
-//
-//          ],
-//        ),
-        body: Center(
+        appBar: AppBar(
+          titleSpacing: 30,
+          elevation: 0.0,
+          title: Row(
+            children: <Widget>[
+              Text(
+                "Fusion",
+                style: TextStyle(
+                    fontSize: 30.0,
+                    fontWeight: FontWeight.w300,
+                    fontStyle: FontStyle.italic,
+                  color: Colors.black,
+                ),
+              ),
+              Text(
+                "Minds",
+                style: TextStyle(
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.deepPurple,
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.white,
+          actions: <Widget>[
+            IconButton(
+              tooltip: "Sign off",
+              iconSize: 30,
+              splashColor: Colors.red,
+              padding: const EdgeInsets.only(right: 30.0),
+              icon: Icon(
+                Icons.power_settings_new,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                logoutUser();
+              },
+              color: Colors.red,
+            ) ,
+          ],
+
+        ),
+        body:Center(
           child: SafeArea(
             child: Column(
-              //mainAxisAlignment: MainAxisAlignment.center,
-              // crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.start,
+               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Text(
-                      "Fusion",
-                      style: TextStyle(
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.w300,
-                          fontStyle: FontStyle.italic),
-                    ),
-                    Text(
-                      "Minds",
-                      style: TextStyle(
-                        fontSize: 30.0,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.deepPurple,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 200,
-                    ),
-                    IconButton(
-                      tooltip: "Sign off",
-                      iconSize: 30,
-                      splashColor: Colors.red,
-                      padding: const EdgeInsets.only(right: 30.0),
-                      icon: Icon(
-                        Icons.power_settings_new,
-                        color: Colors.black,
-                      ),
-                      onPressed: () {
-                        logoutUser();
-                      },
-                      color: Colors.red,
-                    )
-                  ],
-                ),
+
                 ClipPath(
                   clipper: MyClipper(),
                   child: Container(
