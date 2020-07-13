@@ -27,6 +27,7 @@ class BluetoothPrintCheckOutState extends State<BluetoothPrintCheckOut> {
       fee,
       ticketnumber,
       outdate;
+  // ignore: non_constant_identifier_names
   CoutWidgets Cout = new CoutWidgets();
   PrinterBluetoothManager printerManager = PrinterBluetoothManager();
   List<PrinterBluetooth> _devices = [];

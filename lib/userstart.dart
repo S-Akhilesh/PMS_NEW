@@ -40,6 +40,7 @@ class _UserStartPageState extends State<UserStartPage> {
       onWillPop: () => showDialog<bool>(
         context: context,
         builder: (c) => AlertDialog(
+          elevation: 10,
           title: Text('Warning'),
           content: Text('Do you really want to Logout?'),
           actions: [

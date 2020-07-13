@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:nfc_in_flutter/nfc_in_flutter.dart';
 import 'package:pms/ModelClasses/VehicelType.dart';
 import 'package:pms/Printing/bluetoothprinter.dart';
-import 'package:pms/Printing/wifiprinter.dart';
 import '../ComponentsAndConstants/constants.dart';
 import 'Methods/CinFormFields.dart';
 import '../ComponentsAndConstants/flags.dart';
@@ -52,10 +51,10 @@ class _nCheckinState extends State<nCheckin> {
       ),
       body: _loading
           ? Center(
-              child: Padding(
-              padding: const EdgeInsets.all(150.0),
-              child: LinearProgressIndicator(),
-            ))
+          child: Padding(
+            padding: const EdgeInsets.all(150.0),
+            child: LinearProgressIndicator(),
+          ))
           : SafeArea(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -326,8 +325,7 @@ class _nCheckinState extends State<nCheckin> {
                                 ),
                               );
                             } else if (groupValue == 1) {
-                              BluetoothPrintState object =
-                                  BluetoothPrintState();
+                              BluetoothPrintState object = BluetoothPrintState();
                               object.wifiPrintCheckin();
                             }
                             _rfidNumber = "Scan RFID Card";
