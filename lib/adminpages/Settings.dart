@@ -8,7 +8,9 @@ class Settings extends StatefulWidget {
   @override
   _SettingsState createState() => _SettingsState();
 }
+
 TextEditingController cHost = TextEditingController();
+
 class _SettingsState extends State<Settings> {
   FlagSetState FlagsSet = new FlagSetState();
 
@@ -230,9 +232,27 @@ class _SettingsState extends State<Settings> {
               ),
               FlatButton(
                 onPressed: () async {
-                    urls = cHost.text;
-                    SharedPreferences prefs = await SharedPreferences.getInstance();
-                    prefs.setString("host",urls);
+                  urls = cHost.text;
+                  SharedPreferences prefs = await SharedPreferences
+                      .getInstance();
+                  prefs.setString("host", urls);
+                  showDialog(
+                      context: context,
+                      builder: (_)
+                  =>
+                      AlertDialog(
+                        title: Text("STATUS"),
+                        content: Text("HOST SET!"),
+                        actions: [
+                          IconButton(
+                            icon: Icon(Icons.check),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      )
+                  );
                 },
                 child: Container(
                   decoration: BoxDecoration(

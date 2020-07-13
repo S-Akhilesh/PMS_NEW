@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pms/ComponentsAndConstants/constants.dart';
+import 'package:pms/ComponentsAndConstants/flags.dart';
 import 'package:pms/ComponentsAndConstants/textfield.dart';
 import 'package:pms/adminpages/Settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,9 +14,6 @@ class AdminDashboard extends StatefulWidget {
 TextEditingController cUrl = TextEditingController();
 class _AdminDashboardState extends State<AdminDashboard> {
   var urls;
-  void sumne(){
-
-  }
   @override
   Widget build(BuildContext context) {
     cUrl.addListener(() {
@@ -61,6 +59,24 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 urls = cUrl.text;
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 prefs.setString("url",urls);
+                setState(() {
+                  url = urls;
+                });
+                showDialog(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                      title: Text("STATUS"),
+                      content: Text("URL SET!"),
+                      actions: [
+                        IconButton(
+                          icon: Icon(Icons.check),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    ),
+                );
               },
               child: Container(
                 decoration: BoxDecoration(

@@ -57,7 +57,8 @@ class _SplashScreenState extends State<SplashScreen> {
                   fontSize: 40.0,
                   color: Colors.white,
                   fontWeight: FontWeight.w300,
-                  fontStyle: FontStyle.italic,
+                  fontFamily: 'Modernline',
+//                  fontStyle: FontStyle.italic,
                 ),
               ),
               Text(
@@ -65,6 +66,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 style: TextStyle(
                   fontSize: 40.0,
                   fontWeight: FontWeight.w800,
+                  fontFamily: 'Modernline',
                   color: Colors.deepPurple.withOpacity(0.8),
                 ),
               ),
@@ -76,7 +78,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void startTimer() {
-    Timer(Duration(seconds: 5), () {
+    Timer(Duration(seconds: 3), () {
       navigateUser(); //It will redirect  after 3 seconds
     });
   }
