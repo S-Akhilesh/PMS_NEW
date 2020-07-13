@@ -262,7 +262,6 @@ class _nCheckinState extends State<nCheckin> {
                               value: 1,
                               groupValue: groupValue,
                               onChanged: (T) {
-                                print(T);
                                 setState(() {
                                   groupValue = T;
                                 });
@@ -281,7 +280,6 @@ class _nCheckinState extends State<nCheckin> {
                               value: 2,
                               groupValue: groupValue,
                               onChanged: (T) {
-                                print(T);
                                 setState(() {
                                   groupValue = T;
                                 });
@@ -328,8 +326,9 @@ class _nCheckinState extends State<nCheckin> {
                                 ),
                               );
                             } else if (groupValue == 1) {
-                              WifiPrinter wifiPrinter = WifiPrinter();
-                              wifiPrinter.wifiPrint();
+                              BluetoothPrintState object =
+                                  BluetoothPrintState();
+                              object.wifiPrintCheckin();
                             }
                             _rfidNumber = "Scan RFID Card";
                           }
