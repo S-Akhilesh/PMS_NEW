@@ -16,7 +16,6 @@ class _StartingState extends State<Starting> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
