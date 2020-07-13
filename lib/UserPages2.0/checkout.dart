@@ -21,7 +21,6 @@ class nCheckout extends StatefulWidget {
   _nCheckoutState createState() => _nCheckoutState();
 }
 
-
 // ignore: camel_case_types
 class _nCheckoutState extends State<nCheckout> {
   ScanResult codeScanner, GlobalTNumber;
@@ -47,15 +46,6 @@ class _nCheckoutState extends State<nCheckout> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      floatingActionButton: Visibility(
-        visible: alterNumber,
-        child: FloatingActionButton.extended(
-            backgroundColor: Colors.blue.withOpacity(0.6),
-            onPressed: () {
-              getTicketNumberFromAlternateId(CoutMethods.alternateNumber);
-            },
-            label: Text("Search")),
-      ),
       appBar: AppBar(
           elevation: 0.0,
           backgroundColor: Color(0xFF3383CD).withOpacity(0.7),
@@ -145,12 +135,11 @@ class _nCheckoutState extends State<nCheckout> {
                   child: Expanded(
                     child: FlatButton(
                       padding: EdgeInsets.only(
-                          left: 120.0,
-                          right: 120.0,
-                          top: 15.0,
-                          bottom: 15.0),
+                          left: 120.0, right: 120.0, top: 15.0, bottom: 15.0),
                       onPressed: () {
                         setState(() {
+                          getTicketNumberFromAlternateId(
+                              CoutMethods.alternateNumber);
                           Stream<NDEFMessage> stream = NFC.readNDEF();
                           stream.listen((NDEFMessage message) {
                             print(message.data);
@@ -263,7 +252,7 @@ class _nCheckoutState extends State<nCheckout> {
               ),
             ),
             Visibility(
-              visible: isprint,
+              visible: isprint & !ToggleSBVnumber,
               child: Padding(
                 padding: const EdgeInsets.only(left: 70.0),
                 child: Column(
@@ -342,19 +331,24 @@ class _nCheckoutState extends State<nCheckout> {
                         fontSize: 20.0,
                         letterSpacing: 5),
                   ),
-                  onPressed: ()  {
+                  onPressed: () {
                     validate();
-                    if (validated)  checkout();
+                    if (validated) checkout();
                     setState(() {
                       if (isprint && validated) {
-                        Navigator.push(
-                          context,
-                          new MaterialPageRoute(
-                            builder: (context) => BluetoothPrintCheckOut(),
-                          ),
-                        );
-                      }
-                      else if(!isprint && validated){
+                        if (groupValue == 2) {
+                          Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                              builder: (context) => BluetoothPrintCheckOut(),
+                            ),
+                          );
+                        } else if (groupValue == 1) {
+                          BluetoothPrintCheckOutState object =
+                              BluetoothPrintCheckOutState();
+                          object.wifiPrintCheckout();
+                        }
+                      } else if (!isprint && validated) {
                         startTimer();
                       }
                       _rfidNumber = "Scan RFID Card";
@@ -429,9 +423,9 @@ class _nCheckoutState extends State<nCheckout> {
               ),
             ),
             Visibility(
-              visible: !isprint && !ToggleSBVnumber ,
+              visible: !isprint && !ToggleSBVnumber,
               child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Card(
                     child: DataTable(
@@ -548,9 +542,8 @@ class _nCheckoutState extends State<nCheckout> {
       'vehicle_number': vehicleNumber,
     };
     print(data);
-    var response = await http.post(
-        'http://$url/NEW/getTicketNumberVehilceNumber.php',
-        body: data);
+    var response = await http
+        .post('http://$url/NEW/getTicketNumberVehilceNumber.php', body: data);
     try {
       if (response.statusCode == 200) {
         var ticketNumberJason = json.decode(response.body);
@@ -614,11 +607,12 @@ class _nCheckoutState extends State<nCheckout> {
     });
   }
 
-  Future<void> fetchTableItems() async{
+  Future<void> fetchTableItems() async {
     Map data = {
       "ticket_number": CoutMethods.ticketNumber,
     };
-    var response = await http.post('http://$url/NEW/tabDetails.php', body: data);
+    var response =
+        await http.post('http://$url/NEW/tabDetails.php', body: data);
     try {
       if (response.statusCode == 200) {
         var fetch = json.decode(response.body);

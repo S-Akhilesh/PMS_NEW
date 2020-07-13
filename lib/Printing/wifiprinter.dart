@@ -2,13 +2,9 @@ import 'package:esc_pos_printer/esc_pos_printer.dart';
 import 'package:pms/ComponentsAndConstants/flags.dart';
 
 class WifiPrinter {
-  //TODO: FETCH THE CALCULATED DETAILS OF THE TICKET AND PRINT
   void wifiPrint() async {
     print("WIFI CALLED");
     final PrinterNetworkManager printerManager = PrinterNetworkManager();
-    // To discover network printers in your subnet, consider using
-    // ping_discover_network package (https://pub.dev/packages/ping_discover_network).
-    // Note that most of ESC/POS printers are available on port 9100 by default.
     printerManager.selectPrinter(host, port: 9100);
 
     final PosPrintResult res =
@@ -17,7 +13,6 @@ class WifiPrinter {
   }
 
   Future<Ticket> testTicket() async {
-    //final profile = await CapabilityProfile.load();
     final Ticket ticket = Ticket(PaperSize.mm80);
 
     ticket.text(
@@ -60,28 +55,9 @@ class WifiPrinter {
           width: PosTextSize.size2,
         ));
 
-    // Print image
-    // final ByteData data = await rootBundle.load('assets/logo.png');
-    // final Uint8List bytes = data.buffer.asUint8List();
-    // final Image image = decodeImage(bytes);
-    // ticket.image(image);
-    // Print image using alternative commands
-    // ticket.imageRaster(image);
-    // ticket.imageRaster(image, imageFn: PosImageFn.graphics);
-
-    // Print barcode
     final List<int> barData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 4];
     ticket.barcode(Barcode.upcA(barData));
-
-    // Print mixed (chinese + latin) text. Only for printers supporting Kanji mode
-    // ticket.text(
-    //   'hello ! 中文字 # world @ éphémère &',
-    //   styles: PosStyles(codeTable: PosCodeTable.westEur),
-    //   containsChinese: true,
-    // );
-
     ticket.feed(2);
-
     ticket.cut();
     return ticket;
   }

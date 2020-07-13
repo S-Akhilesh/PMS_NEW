@@ -9,10 +9,10 @@ import 'package:pms/ModelClasses/check_out_print2.dart';
 
 class BluetoothPrint extends StatefulWidget {
   @override
-  _BluetoothPrintState createState() => _BluetoothPrintState();
+  BluetoothPrintState createState() => BluetoothPrintState();
 }
 
-class _BluetoothPrintState extends State<BluetoothPrint> {
+class BluetoothPrintState extends State<BluetoothPrint> {
   String organistion,
       receiptno,
       vechiletype,
@@ -26,6 +26,7 @@ class _BluetoothPrintState extends State<BluetoothPrint> {
   bool _loading = false;
   var t_table = List<CheckInPrint>();
   var o_table = List<CheckOutPrint2>();
+
   @override
   void initState() {
     _loading = true;
@@ -231,5 +232,107 @@ class _BluetoothPrintState extends State<BluetoothPrint> {
     setState(() {
       _loading = false;
     });
+  }
+
+  void wifiPrintCheckin() async {
+    print('Wifi Print Called');
+    final PrinterNetworkManager printerManager = PrinterNetworkManager();
+    printerManager.selectPrinter(host, port: 9100);
+    final PosPrintResult res =
+        await printerManager.printTicket(await testTicket());
+    print('Print result: ${res.msg}');
+  }
+
+  Future<Ticket> testTicket() async {
+    Ticket ticket = Ticket(PaperSize.mm58);
+    ticket.text('$organistion'.toUpperCase(),
+        styles: PosStyles(
+          bold: true,
+          height: PosTextSize.size2,
+          width: PosTextSize.size2,
+          align: PosTextAlign.center,
+          fontType: PosFontType.fontA,
+          reverse: false,
+          underline: true,
+        ));
+    ticket.row([
+      PosColumn(
+        text: 'PHONE NO: $phnumber',
+        width: 12,
+        styles:
+            PosStyles(align: PosTextAlign.left, underline: true, bold: true),
+      ),
+    ]);
+    ticket.row([
+      PosColumn(
+        text: 'Email:',
+        width: 1,
+        styles:
+            PosStyles(align: PosTextAlign.left, underline: true, bold: true),
+      ),
+      PosColumn(
+        text: '$email',
+        width: 11,
+        styles:
+            PosStyles(align: PosTextAlign.left, underline: true, bold: true),
+      ),
+    ]);
+    ticket.row([
+      PosColumn(
+        text: 'Address: $address',
+        width: 12,
+        styles:
+            PosStyles(align: PosTextAlign.left, underline: true, bold: true),
+      ),
+    ]);
+    ticket.emptyLines(1);
+    ticket.row([
+      PosColumn(
+        text: '--------------------------------',
+        width: 12,
+        styles:
+            PosStyles(align: PosTextAlign.left, underline: true, bold: true),
+      ),
+    ]);
+    ticket.row([
+      PosColumn(
+        text: 'RECEIPT NO: $receiptno',
+        width: 12,
+        styles:
+            PosStyles(align: PosTextAlign.left, underline: true, bold: true),
+      ),
+    ]);
+    ticket.emptyLines(1);
+    ticket.row([
+      PosColumn(
+        text: 'VEHICLE TYPE: $vechiletype',
+        width: 12,
+        styles:
+            PosStyles(align: PosTextAlign.left, underline: false, bold: true),
+      ),
+    ]);
+    ticket.emptyLines(1);
+    ticket.row([
+      PosColumn(
+        text: 'VEHICLE NUMBER: $vehcilenumber',
+        width: 12,
+        styles:
+            PosStyles(align: PosTextAlign.left, underline: false, bold: true),
+      ),
+    ]);
+    ticket.emptyLines(1);
+    ticket.row([
+      PosColumn(
+        text: 'IN DATE: $indate',
+        width: 12,
+        styles:
+            PosStyles(align: PosTextAlign.left, underline: false, bold: true),
+      ),
+    ]);
+    ticket.emptyLines(1);
+    final List<dynamic> barData = returnTid("$receiptno");
+    ticket.barcode(Barcode.code39(barData));
+    ticket.feed(1);
+    ticket.cut();
   }
 }
