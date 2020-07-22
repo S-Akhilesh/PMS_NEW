@@ -11,8 +11,9 @@ import '../ComponentsAndConstants/constants.dart';
 import '../ComponentsAndConstants/flags.dart';
 import 'package:http/http.dart' as http;
 
+// ignore: non_constant_identifier_names
 String Dupnumber = '';
-String tabTNo = 'PA', tabVno = "KA", tabCost = "0";
+String tabTNo = ' ', tabVno = " ", tabCost = " ";
 bool alterNumber = false;
 
 // ignore: camel_case_types
@@ -23,10 +24,12 @@ class nCheckout extends StatefulWidget {
 
 // ignore: camel_case_types
 class _nCheckoutState extends State<nCheckout> {
+  // ignore: non_constant_identifier_names
   ScanResult codeScanner, GlobalTNumber;
   int groupValue = 1;
   String qrCodeResult = "SCAN TO KNOW THE QR RESULTS";
   String _rfidNumber = "Scan RFID Card";
+  // ignore: non_constant_identifier_names
   TicketInit TicketNumberObject;
   // ignore: non_constant_identifier_names
   CoutWidgets CoutMethods = CoutWidgets();
@@ -132,35 +135,32 @@ class _nCheckoutState extends State<nCheckout> {
                 padding: const EdgeInsets.only(left: 16.0, right: 16.0),
                 child: Visibility(
                   visible: rfidflag,
-                  child: Expanded(
-                    child: FlatButton(
-                      padding: EdgeInsets.only(
-                          left: 120.0, right: 120.0, top: 15.0, bottom: 15.0),
-                      onPressed: () {
-                        setState(() {
-                          getTicketNumberFromAlternateId(
-                              CoutMethods.alternateNumber);
-                          Stream<NDEFMessage> stream = NFC.readNDEF();
-                          stream.listen((NDEFMessage message) {
-                            print(message.data);
-                            _rfidNumber = message.data;
-                          });
+                  child: FlatButton( //Expanded here
+                    padding: EdgeInsets.only(
+                        left: 120.0, right: 120.0, top: 15.0, bottom: 15.0),
+                    onPressed: () {
+                      setState(() {
+                        getTicketNumberFromAlternateId(
+                            CoutMethods.alternateNumber);
+                        Stream<NDEFMessage> stream = NFC.readNDEF();
+                        stream.listen((NDEFMessage message) {
+                          _rfidNumber = message.data;
                         });
-                      },
-                      child: Center(
-                        child: Text(
-                          _rfidNumber,
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.w400),
-                        ),
+                      });
+                    },
+                    child: Center(
+                      child: Text(
+                        _rfidNumber,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.w400),
                       ),
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                            color: Colors.black.withOpacity(0.5), width: 3.0),
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
+                    ),
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                          color: Colors.black.withOpacity(0.5), width: 3.0),
+                      borderRadius: BorderRadius.circular(15.0),
                     ),
                   ),
                 ),
@@ -269,7 +269,6 @@ class _nCheckoutState extends State<nCheckout> {
                         value: 1,
                         groupValue: groupValue,
                         onChanged: (T) {
-                          print(T);
                           setState(() {
                             groupValue = T;
                           });
@@ -288,7 +287,6 @@ class _nCheckoutState extends State<nCheckout> {
                         value: 2,
                         groupValue: groupValue,
                         onChanged: (T) {
-                          print(T);
                           setState(() {
                             groupValue = T;
                           });
@@ -362,7 +360,6 @@ class _nCheckoutState extends State<nCheckout> {
             Visibility(
               visible: ToggleSBVnumber,
               child: FlatButton(
-                //TODO: DATABASE CONNECTION VARIABLE
                 onPressed: () {
                   validate();
                   toggleVNButton();
@@ -396,7 +393,6 @@ class _nCheckoutState extends State<nCheckout> {
               ),
             ),
             Visibility(
-              //TODO: QUERY WITH Tid For Ticket Number
               visible: !ToggleSBVnumber,
               child: FlatButton(
                 padding: EdgeInsets.only(
@@ -462,7 +458,7 @@ class _nCheckoutState extends State<nCheckout> {
   Future<String> readNFC() {
     Stream<NDEFMessage> stream = NFC.readNDEF();
     stream.listen((NDEFMessage message) {
-      print(message.data.toUpperCase());
+//      print(message.data.toUpperCase());
       return message.data;
     });
   }
@@ -486,7 +482,6 @@ class _nCheckoutState extends State<nCheckout> {
     Map data = {
       'transaction_id': codeResult,
     };
-    print(data);
     var response =
         await http.post('http://$url/NEW/getTicketNumberTid.php', body: data);
     try {
@@ -513,21 +508,16 @@ class _nCheckoutState extends State<nCheckout> {
     Map data = {
       'alternate_id': alterNumber,
     };
-    print(data);
     var response =
         await http.post('http://$url/NEW/getTicketNumberAid.php', body: data);
     try {
       if (response.statusCode == 200) {
-        print("inside");
         var ticketNumberJason = json.decode(response.body);
-        print(ticketNumberJason);
         for (var tnumber in ticketNumberJason) {
           TicketNumberObject = TicketInit.fromJson(tnumber);
         }
-        print(TicketNumberObject.ticketNumber);
         setState(() {
-          if (TicketNumberObject.ticketNumber == false) {
-            //TODO: ALTER MESSAGE AID DOESNT EXITS.
+          if (TicketNumberObject.ticketNumber == "false") {
           } else
             CoutMethods.setTicketNumber(TicketNumberObject.ticketNumber);
         });
@@ -541,7 +531,6 @@ class _nCheckoutState extends State<nCheckout> {
     Map data = {
       'vehicle_number': vehicleNumber,
     };
-    print(data);
     var response = await http
         .post('http://$url/NEW/getTicketNumberVehilceNumber.php', body: data);
     try {
@@ -559,7 +548,7 @@ class _nCheckoutState extends State<nCheckout> {
         });
       }
     } catch (Exception) {
-      showError("Some error occured, Please RETRY");
+      showError("Error! Please RETRY");
     }
   }
 
@@ -568,7 +557,6 @@ class _nCheckoutState extends State<nCheckout> {
       "ticket_number": CoutMethods.ticketNumber,
       "user_name": nameDisp,
     };
-    print(data);
     var response = await http.post('http://$url/NEW/update.php', body: data);
     try {
       if (response.statusCode == 200) {

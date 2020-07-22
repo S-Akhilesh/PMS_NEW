@@ -12,7 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'ModelClasses/UserMasterMO.dart';
 import 'adminpages/AdminDashboard.dart';
 
-var users = new List<UserMasterMO>();
+List<UserMasterMO> users = new List<UserMasterMO>();
 String nameDisp = '';
 var username = '', password = '';
 
@@ -24,11 +24,12 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController uc = TextEditingController();
   TextEditingController pc = TextEditingController();
-  FlagSetState FlagsSet = new FlagSetState();
+  // ignore: non_constant_identifier_names
+//  FlagSetState FlagsSet = new FlagSetState();
 
   @override
   void initState() {
-    Timer(Duration(seconds: 2), FlagsSet.fetchFlag);
+//    Timer(Duration(seconds: 2), FlagsSet.fetchFlag);
     super.initState();
   }
 
@@ -39,16 +40,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+
     Future<void> signIn(String username, String password) async {
-//      setState(() {
-//        if(!isConnected){
-//          return Center(
-//              child: Padding(
-//                padding: const EdgeInsets.all(150.0),
-//                child: LinearProgressIndicator(),
-//              ));
-//        }
-//      });
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
       Map data = {'user_name': username, 'user_pass': password};
@@ -97,7 +90,6 @@ class _LoginPageState extends State<LoginPage> {
                     ));
           }
         } else {
-          print("Wrong ");
           showDialog(
               context: context,
               builder: (_) => AlertDialog(
@@ -144,109 +136,106 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: Expanded(
-          flex: 1,
-          child: Column(
-            children: <Widget>[
-              ClipPath(
-                clipper: MyLoginClipper(),
+        child: Column(//Expanded here
+          children: <Widget>[
+            ClipPath(
+              clipper: MyLoginClipper(),
+              child: Container(
                 child: Container(
-                  child: Container(
-                    alignment: AlignmentDirectional.center,
-                    child: RotateAnimatedTextKit(
-                      onTap: () {},
-                      text: ["Parking", "Management System"],
-                      textStyle: TextStyle(
-                          fontSize: 50.0,
-                          color: ktextColor,
-                          fontWeight: FontWeight.bold),
-                    ),
+                  alignment: AlignmentDirectional.center,
+                  child: RotateAnimatedTextKit(
+                    onTap: () {},
+                    text: ["Parking", "Management System"],
+                    textStyle: TextStyle(
+                        fontSize: 50.0,
+                        color: ktextColor,
+                        fontWeight: FontWeight.bold),
                   ),
-                  padding: EdgeInsets.only(left: 40, top: 50, right: 20),
-                  height: 400,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      colors: [
-                        Color(0xFF3383CD),
-                        kbuttonColor,
-                      ],
-                    ),
+                ),
+                padding: EdgeInsets.only(left: 40, top: 50, right: 20),
+                height: 400,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      Color(0xFF3383CD),
+                      kbuttonColor,
+                    ],
                   ),
                 ),
               ),
-              BeautyTextfield(
-                cornerRadius: BorderRadius.circular(50),
-                width: 400,
-                height: 75,
-                inputType: TextInputType.text,
-                controller: uc,
-                placeholder: "Username",
-                prefixIcon: Icon(Icons.supervised_user_circle),
-                onSubmitted: (text) {
-                  password = text;
-                },
-              ),
-              BeautyTextfield(
-                cornerRadius: BorderRadius.circular(50),
-                maxLines: 1,
-                obscureText: true,
-                width: 400,
-                height: 75,
-                inputType: TextInputType.text,
-                controller: pc,
-                placeholder: "Password",
-                prefixIcon: Icon(Icons.lock_outline),
-                onSubmitted: (text) {
-                  password = text;
-                },
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              FlatButton(
-                onPressed: () {
-                  setState(() {
-                    if (username == 'admin' && password == 'admin') {
-                      Navigator.push(
-                          context,
-                          new MaterialPageRoute(
-                              builder: (context) => AdminDashboard()));
-                    } else {
-                      signIn(username, password);
-                    }
-                  });
+            ),
+            BeautyTextfield(
+              cornerRadius: BorderRadius.circular(50),
+              width: 400,
+              height: 75,
+              inputType: TextInputType.text,
+              controller: uc,
+              placeholder: "Username",
+              prefixIcon: Icon(Icons.supervised_user_circle),
+              onSubmitted: (text) {
+                password = text;
+              },
+            ),
+            BeautyTextfield(
+              cornerRadius: BorderRadius.circular(50),
+              maxLines: 1,
+              obscureText: true,
+              width: 400,
+              height: 75,
+              inputType: TextInputType.text,
+              controller: pc,
+              placeholder: "Password",
+              prefixIcon: Icon(Icons.lock_outline),
+              onSubmitted: (text) {
+                password = text;
+              },
+            ),
+            SizedBox(
+              height: 20.0,
+            ),
+            FlatButton(
+              onPressed: () {
+                setState(() {
+                  if (username == 'admin' && password == 'admin') {
+                    Navigator.push(
+                        context,
+                        new MaterialPageRoute(
+                            builder: (context) => AdminDashboard()));
+                  } else {
+                    signIn(username, password);
+                  }
+                });
 
-                  clear();
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: kbuttonColor,
-                    borderRadius: BorderRadius.circular(50),
-                    gradient: LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      colors: [
-                        Color(0xFF3383CD),
-                        kbuttonColor,
-                      ],
-                    ),
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 75),
-                  child: Text(
-                    'LOGIN',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 20.0,
-                        letterSpacing: 5),
+                clear();
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: kbuttonColor,
+                  borderRadius: BorderRadius.circular(50),
+                  gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      Color(0xFF3383CD),
+                      kbuttonColor,
+                    ],
                   ),
                 ),
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 75),
+                child: Text(
+                  'LOGIN',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 20.0,
+                      letterSpacing: 5),
+                ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

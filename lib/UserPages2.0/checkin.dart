@@ -16,7 +16,6 @@ class nCheckin extends StatefulWidget {
 
 // ignore: camel_case_types
 class _nCheckinState extends State<nCheckin> {
-  //TODO:List for selecting the vehicle type from DB.
   var vehicleType = new List<Welcome>();
   String msg;
   bool _loading = false;
@@ -49,6 +48,7 @@ class _nCheckinState extends State<nCheckin> {
           style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.w300),
         ),
       ),
+
       body: _loading
           ? Center(
           child: Padding(
@@ -64,39 +64,34 @@ class _nCheckinState extends State<nCheckin> {
                         left: 16.0, right: 16.0, top: 16.0),
                     child: Visibility(
                       visible: rfidflag,
-                      child: Expanded(
-                        child: FlatButton(
-                          padding: EdgeInsets.only(
-                              left: 120.0,
-                              right: 120.0,
-                              top: 15.0,
-                              bottom: 15.0),
-                          onPressed: () {
-                            setState(() {
-                              Stream<NDEFMessage> stream = NFC.readNDEF();
-                              stream.listen((NDEFMessage message) {
-                                print(message.data);
-                                _rfidNumber = message.data;
-                              });
+                      child: FlatButton( //Expanded here
+                        padding: EdgeInsets.only(
+                            left: 120.0,
+                            right: 120.0,
+                            top: 15.0,
+                            bottom: 15.0),
+                        onPressed: () {
+                          setState(() {
+                            Stream<NDEFMessage> stream = NFC.readNDEF();
+                            stream.listen((NDEFMessage message) {
+                              _rfidNumber = message.data;
                             });
-                          },
-                          child: Expanded(
-                            child: Center(
-                              child: Text(
-                                _rfidNumber,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                            ),
+                          });
+                        },
+                        child: Center( //Expanded here
+                          child: Text(
+                            _rfidNumber,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.w400),
                           ),
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                                color: Colors.black.withOpacity(0.5),
-                                width: 3.0),
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
+                        ),
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                              color: Colors.black.withOpacity(0.5),
+                              width: 3.0),
+                          borderRadius: BorderRadius.circular(15.0),
                         ),
                       ),
                     ),
@@ -350,7 +345,6 @@ class _nCheckinState extends State<nCheckin> {
   Future<String> readNFC() {
     Stream<NDEFMessage> stream = NFC.readNDEF();
     stream.listen((NDEFMessage message) {
-      print(message.data.toUpperCase());
       return message.data;
     });
   }
@@ -374,20 +368,16 @@ class _nCheckinState extends State<nCheckin> {
       "vtype": selecteditem,
       "helmet_count": CinMethods.numberOfHelmet,
     };
-    print(data);
 
     message = await http.post('http://$url/NEW/insert.php', body: data);
-    print(message.body);
     try {
       if (message.statusCode == 200) {
-        print("Inserted");
         setState(() {
           msg = message.body;
         });
         showError(msg);
       }
     } catch (Exception) {
-      print("Agalla");
     }
   }
 
@@ -405,7 +395,6 @@ class _nCheckinState extends State<nCheckin> {
         _vtype.remove("helmet");
       }
     } catch (Exception) {
-      print("Agalla");
     }
     setState(() {
       _loading = false;

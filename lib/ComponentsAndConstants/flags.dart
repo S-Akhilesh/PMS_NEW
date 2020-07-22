@@ -9,7 +9,7 @@ bool defaultEnabled,
     helmetflag,
     isConnected = false;
 
-String host; // setting Wifi Printer Host in Admin Panel
+String host =" "; // setting Wifi Printer Host in Admin Panel
 String url;
 
 class FlagSet extends StatefulWidget {
@@ -50,10 +50,7 @@ class FlagSetState extends State<FlagSet> {
           defaultEnabled = true;
         }
       }
-    } catch (Exception) {print("gotila");}
-    print(rfidflag);
-    print(defaultEnabled);
-    print(helmetflag);
+    } catch (Exception) {print("Error");}
   }
 
   @override

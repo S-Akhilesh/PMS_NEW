@@ -14,16 +14,16 @@ bool status = false;
 class SplashScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _SplashScreenState();
   }
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  // ignore: non_constant_identifier_names
   FlagSetState FlagsSet = new FlagSetState();
   @override
   void initState() {
-    FlagsSet.fetchFlag();
+
     startTimer();
     super.initState();
   }
@@ -91,6 +91,9 @@ class _SplashScreenState extends State<SplashScreen> {
       host = prefs.getString("host");
     });
     try {
+      if(url != null && url != ""){
+        await FlagsSet.fetchFlag();
+      }
       if (status == true && isConnected == true) {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
