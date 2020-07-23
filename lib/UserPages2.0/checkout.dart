@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:barcode_scan/barcode_scan.dart';
+//import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:nfc_in_flutter/nfc_in_flutter.dart';
 import 'package:pms/ModelClasses/ticketInit.dart';
 import 'package:pms/Printing/bluetoothprintercheckout.dart';
@@ -25,7 +26,7 @@ class nCheckout extends StatefulWidget {
 // ignore: camel_case_types
 class _nCheckoutState extends State<nCheckout> {
   // ignore: non_constant_identifier_names
-  ScanResult codeScanner, GlobalTNumber;
+  String codeScanner;
   int groupValue = 1;
   String qrCodeResult = "SCAN TO KNOW THE QR RESULTS";
   String _rfidNumber = "Scan RFID Card";
@@ -398,9 +399,10 @@ class _nCheckoutState extends State<nCheckout> {
                 padding: EdgeInsets.only(
                     left: 60.0, right: 60.0, top: 15.0, bottom: 15.0),
                 onPressed: () async {
-                  codeScanner = await BarcodeScanner.scan();
+                  codeScanner = await FlutterBarcodeScanner.scanBarcode("#ff6666", "Cancel", true, ScanMode.BARCODE); //BarcodeScanner.scan();
+                  print(codeScanner);
                   setState(() {
-                    qrCodeResult = codeScanner.rawContent;
+                    qrCodeResult = codeScanner;
                     getTicketNumberFromScanner(qrCodeResult);
                   });
                 },

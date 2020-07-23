@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pms/ComponentsAndConstants/flags.dart';
@@ -100,7 +99,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 builder: (BuildContext context) => UserStartPage()),
             (Route<dynamic> route) => false);
       }
-      if (status == null || status == false || isConnected == false) {
+      else if (status == null || status == false || isConnected == false) {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
             (Route<dynamic> route) => false);
